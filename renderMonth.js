@@ -13,26 +13,44 @@ import createDayElement from "./createDayElement";
 const daysContainer = document.querySelector("[data-calender-days]");
 
 export default function renderMonth(monthDate) {
+  let month;
+  if (!isNaN(Date.parse(monthDate))) {
+    month = Date.parse(monthDate);
+  } else {
+    month = monthDate;
+  }
+
   document.querySelector("[data-month-title]").textContent = format(
-    monthDate,
+    month,
     "MMMM yyyy"
   );
 
-  const dayElements = getCalendarDates(monthDate).map((date, index) =>
-    createDayElement(date, {
-      isCurrentMonth: isSameMonth(monthDate, date),
+  const dayElements = getCalendarDates(month).map((date, index) => {
+    return createDayElement(date, {
+      isCurrentMonth: isSameMonth(month, date),
       isCurrentDay: isSameDay(Date.now(), date),
       showWeekName: index < 7,
-    })
-  );
+    });
+  });
   daysContainer.innerHTML = "";
   dayElements.forEach((element) => daysContainer.append(element));
-  dayElements.forEach(fixEventOverflow);
+  dayElements.forEach((element) => {
+    return fixEventOverflow(element);
+  });
 }
 
 function getCalendarDates(date) {
-  const firstWeekStart = startOfWeek(startOfMonth(date), { weekStartsOn: 1 });
-  const lastWeekStart = endOfWeek(endOfMonth(date), { weekStartsOn: 1 });
+  let element;
+  if (!isNaN(Date.parse(date))) {
+    element = Date.parse(date);
+  } else {
+    element = date;
+  }
+
+  const firstWeekStart = startOfWeek(startOfMonth(element), {
+    weekStartsOn: 1,
+  });
+  const lastWeekStart = endOfWeek(endOfMonth(element), { weekStartsOn: 1 });
   const month = eachDayOfInterval({
     start: firstWeekStart,
     end: lastWeekStart,

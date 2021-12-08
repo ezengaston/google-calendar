@@ -46,6 +46,7 @@ export default function createDayElement(date, options = {}) {
   const dayNumberElement = dayElement.querySelector("[data-day-number]");
 
   dayNumberElement.textContent = date.getDate();
+  dayNumberElement.dataset.date = date;
 
   if (isCurrentDay) {
     dayNumberElement.classList.add("active");

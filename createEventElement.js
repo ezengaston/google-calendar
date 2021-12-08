@@ -1,4 +1,4 @@
-import { parse, format } from "date-fns";
+import { parse, format, parseISO } from "date-fns";
 import { updateEvent, removeEvent } from "./events";
 import { openEditEventModal } from "./modal";
 import renderMonth from "./renderMonth";
@@ -8,7 +8,8 @@ export default function createEventElement(event) {
     ? createAllDayEventElement(event)
     : createTimedEventElement(event);
 
-  element.addEventListener("click", () => {
+  element.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
     openEditEventModal(
       event,
       (updatedEvent) => {
@@ -33,6 +34,7 @@ function createAllDayEventElement(event) {
 
   element.classList.add(event.color);
   element.querySelector("[data-name]").textContent = event.name;
+  element.dataset.id = event.id;
 
   return element;
 }
@@ -45,10 +47,18 @@ function createTimedEventElement(event) {
 
   element.querySelector("[data-name]").textContent = event.name;
   element.querySelector("[data-color]").classList.add(event.color);
+
+  let elementDate;
+  if (parseISO(event.date) != "Invalid Date") {
+    elementDate = parseISO(event.date);
+  } else {
+    elementDate = event.date;
+  }
   element.querySelector("[data-time]").textContent = format(
-    parse(event.startTime, "HH:mm", event.date),
+    parse(event.startTime, "HH:mm", elementDate),
     "h:mmaaa"
   );
+  element.dataset.id = event.id;
 
   return element;
 }

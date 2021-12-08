@@ -1,5 +1,6 @@
 import renderMonth, { fixEventOverflow } from "./renderMonth";
 import { addMonths, subMonths } from "date-fns";
+import { dragAndDrop } from "./dragAndDrop";
 
 let selectedMonth = Date.now();
 
@@ -30,4 +31,5 @@ window.addEventListener("resize", () => {
   }, 100);
 });
 
+dragAndDrop();
 renderMonth(Date.now());

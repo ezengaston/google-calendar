@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
 const modal = document.querySelector("[data-modal]");
@@ -39,8 +39,16 @@ function getEventFormModalBody(event, saveCallback, deleteCallback) {
   formModalBody.querySelector("[data-title]").textContent = isNewEvent
     ? "Add Event"
     : "Edit Event";
+
+  let elementDate;
+  if (parseISO(event.date) != "Invalid Date") {
+    elementDate = parseISO(event.date);
+  } else {
+    elementDate = event.date;
+  }
+
   formModalBody.querySelector("[data-date]").textContent = format(
-    event.date,
+    elementDate,
     "d/M/yyyy"
   );
 

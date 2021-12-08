@@ -2,7 +2,7 @@ import { isSameDay, parseISO } from "date-fns";
 
 const EVENTS_KEY = "CALENDER.events";
 
-let events =
+export let events =
   JSON.parse(localStorage.getItem(EVENTS_KEY))?.map((event) => {
     return { ...event, date: parseISO(event.date) };
   }) || [];
@@ -29,7 +29,15 @@ export function removeEvent(event) {
 
 export function getEventsForDay(date) {
   return events
-    .filter((event) => isSameDay(event.date, date))
+    .filter((event) => {
+      let element;
+      if (parseISO(event.date) != "Invalid Date") {
+        element = parseISO(event.date);
+      } else {
+        element = event.date;
+      }
+      return isSameDay(element, date);
+    })
     .sort(compareEvents);
 }
 
